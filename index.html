@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Study Partner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      width: 90%;
+      max-width: 700px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #4facfe;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3793f7;
+    }
+
+    .output {
+      margin-top: 20px;
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      min-height: 100px;
+    }
+
+    .loading {
+      color: gray;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Study Partner</h1>
+
+    <div class="input-group">
+      <input id="topic" placeholder="Enter topic (e.g. Binary Search)">
+      <button onclick="study()">Study</button>
+    </div>
+
+    <div class="output" id="output">
+      Enter a topic and click Study.
+    </div>
+  </div>
+
+  <script>
+    async function study() {
+      const topic = document.getElementById("topic").value;
+      const output = document.getElementById("output");
+
+      if (!topic) {
+        output.innerText = "Please enter a topic.";
+        return;
+      }
+
+      output.innerHTML = "<span class='loading'>Loading...</span>";
+
+      try {
+        const res = await fetch("/study", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ topic }),
+        });
+
+        const data = await res.json();
+        output.innerText = data.result;
+      } catch (err) {
+        output.innerText = "Error connecting to server.";
+      }
+    }
+  </script>
+</body>
+</html>
